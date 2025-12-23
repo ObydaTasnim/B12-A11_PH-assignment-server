@@ -7,11 +7,22 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 // CORS - MUST BE FIRST
+// CORS middleware - MUST BE FIRST
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'https://b12-a11-ph-assignment.netlify.app',  // Your Netlify URL
+    process.env.CLIENT_URL
+  ];
+  
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  }
   
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
